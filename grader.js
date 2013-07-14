@@ -47,7 +47,7 @@ var loadChecks = function(checksfile) {
 
 var checkHtmlFile = function(htmlfile, checksfile) {
     $ = cheerioHtmlFile(htmlfile);
-    var checks = loadChecks(checksfile).sort();
+    var checks = loadChecks(htmlfile).sort();
     var out = {};
     for(var ii in checks) {
         var present = $(checks[ii]).length > 0;
@@ -63,7 +63,7 @@ var clone = function(fn) {
 };
 
 var checkUrl = function(url,checkurl){
-  rest.get(url).on('complete',function(result){
+  res.get(url).on('complete',function(result){
        $ = cheerio.load(result); 
        var check=loadChecks(checkurl).sort();
        var out = {};
@@ -71,7 +71,7 @@ var checkUrl = function(url,checkurl){
         var isthere = $(check[i]).length>0;
         out[check[i]]=isthere;
        }
-      var outJson = JSON.stringfy(out,null,4);
+      var outJson = JSON.stringify(out,null,4);
       console.log(outJson);
   });
 }
@@ -79,8 +79,8 @@ var checkUrl = function(url,checkurl){
 
 if(require.main == module) {
     program
-        .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
-        .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
+        .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists))
+        .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists))
         .option('-u, --url <url_link>','Link to url')
         .parse(process.argv);
    if(program.url){
